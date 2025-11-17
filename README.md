@@ -19,6 +19,11 @@
   </a>
 </p>
 
+## 🚀 Live Demo
+
+🔗 **Try the App Here:**  
+👉 https://YOUR-APP.streamlit.app
+
 
 # 🌟 Overview
 
@@ -100,7 +105,8 @@ Copy code
 # 📸 App UI Preview
 
 <p align="center">
-  <img src="YOUR_SCREENSHOT_URL" width="90%" />
+  <img src="<img width="1883" height="970" alt="image" src="https://github.com/user-attachments/assets/ee806a35-4a9d-47e5-87f3-ee51354c5ac0" />
+" width="90%" />
 </p>
 
 ---
@@ -154,8 +160,15 @@ Copy code
 
 **Shashank R**  
 💼 Data Science Enthusiast  
-🔗 LinkedIn: YOUR_LINK  
-🐙 GitHub: YOUR_LINK  
+<p align="center">
+  <a href="https://github.com/shashankphenomeno111" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub-Shashank%20R-181717?style=for-the-badge&logo=github" />
+  </a>
+  <a href="https://www.linkedin.com/in/shashankdatascientist/" target="_blank">
+    <img src="https://img.shields.io/badge/LinkedIn-Shashank%20R-0A66C2?style=for-the-badge&logo=linkedin" />
+  </a>
+</p>
+ 
 
 ---
 
