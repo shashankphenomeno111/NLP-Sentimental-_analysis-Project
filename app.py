@@ -4,9 +4,16 @@ import re
 import nltk
 from nltk.corpus import stopwords
 
-# Download stopwords once
-nltk.download('stopwords')
-stop_words = set(stopwords.words('english'))
+import nltk
+nltk.data.path.append("nltk_data")
+
+# Try loading stopwords
+try:
+    stop_words = set(stopwords.words('english'))
+except LookupError:
+    nltk.download('stopwords')
+    stop_words = set(stopwords.words('english'))
+
 
 # ---------- Load model & vectorizer (with caching) ----------
 @st.cache_resource
