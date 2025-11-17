@@ -14,15 +14,27 @@
 ---
 
 <p align="center">
-  <a href="YOUR_STREAMLIT_URL_HERE" target="_blank">
+  <a href=👉(https://nlp-sentimental-analysis-project-uy8fgcd6vr7zq3os7uqh5s.streamlit.app/) target="_blank">
     <img src="https://img.shields.io/badge/🔴 LIVE DEMO-Streamlit%20App-purple?style=for-the-badge&logo=streamlit" />
   </a>
 </p>
 
+## 🎯 Objective
+
+The objective of this project is to build an efficient and accurate sentiment analysis system for mobile product reviews using classical Machine Learning techniques. The goal is to automatically classify user reviews into **Positive** or **Negative** sentiments by applying:
+
+- Text preprocessing and spell correction  
+- TF-IDF vectorization for feature extraction  
+- SMOTE for class balancing  
+- Linear SVM for high-accuracy classification  
+
+The final system is deployed as an interactive **Streamlit Web Application**, enabling users to input any mobile review and instantly receive a sentiment prediction with a clean, user-friendly interface.
+
+
 ## 🚀 Live Demo
 
 🔗 **Try the App Here:**  
-👉 https://YOUR-APP.streamlit.app
+👉(https://nlp-sentimental-analysis-project-uy8fgcd6vr7zq3os7uqh5s.streamlit.app/)
 
 
 # 🌟 Overview
@@ -76,7 +88,8 @@ It predicts whether a mobile review is:
 # 🔮 Workflow
 
 <p align="center">
-  <img src="YOUR_WORKFLOW_IMAGE_URL" width="85%">
+  <img src=<img width="600" height="297" alt="image" src="https://github.com/user-attachments/assets/87eb29a6-c52f-4e17-9651-d0456c00875b" />
+ width="85%">
 </p>
 
 Dataset
@@ -104,10 +117,8 @@ Copy code
 
 # 📸 App UI Preview
 
-<p align="center">
-  <img src="<img width="1883" height="970" alt="image" src="https://github.com/user-attachments/assets/ee806a35-4a9d-47e5-87f3-ee51354c5ac0" />
-" width="90%" />
-</p>
+<img width="1895" height="1011" alt="image" src="https://github.com/user-attachments/assets/b1bc5496-cc31-4c26-9533-5884767aad0b" />
+
 
 ---
 
