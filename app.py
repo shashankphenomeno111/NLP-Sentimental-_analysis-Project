@@ -4,62 +4,89 @@ import re
 import nltk
 from nltk.corpus import stopwords
 
-# ----------------------- NLTK SETUP -----------------------
-# Try to load stopwords, download if missing
-nltk.data.path.append("nltk_data")
-try:
-    stop_words = set(stopwords.words('english'))
-except LookupError:
-    nltk.download('stopwords')
-    stop_words = set(stopwords.words('english'))
+# =================== EXAMPLE REVIEWS ===================
 
-# ----------------------- LOAD MODEL -----------------------
+POSITIVE_EXAMPLES = [
+    "This phone is excellent, the camera quality is outstanding and battery lasts all day.",
+    "Amazing performance, super smooth and fast. Totally worth the price!",
+    "The display is bright and vibrant, and the speakers are surprisingly loud.",
+    "I love this device, charging is very fast and there is no overheating.",
+    "Great value for money, the phone feels premium and runs all apps easily.",
+    "The camera is crystal clear and low-light photos are impressive.",
+    "Battery backup is superb, easily lasts more than a day with heavy use.",
+    "The UI is clean and user-friendly, no lags or issues so far.",
+    "Awesome phone for gaming, graphics run smoothly without frame drops.",
+    "Really happy with the purchase, build quality is top-notch and durable.",
+]
+
+NEGATIVE_EXAMPLES = [
+    "Very disappointing phone, battery drains extremely fast and heats up a lot.",
+    "The camera quality is terrible, pictures look blurry even in daylight.",
+    "The phone keeps hanging and apps crash frequently, waste of money.",
+    "Poor build quality, the back panel started making noise within a week.",
+    "The display is dull and colors look washed out. Not satisfied at all.",
+    "Charging is very slow and the phone gets hot even during normal use.",
+    "Speakers are very weak and the call quality is also bad.",
+    "Worst phone ever, performance is laggy and not suitable even for basic use.",
+    "Network issues everywhere, calls drop and internet is unstable.",
+    "The phone started showing problems within a month, bad experience overall.",
+]
+
+# =================== NLTK SETUP ===================
+
+# Add custom nltk path for Streamlit Cloud and try loading stopwords
+nltk.data.path.append("nltk_data")
+
+try:
+    stop_words = set(stopwords.words("english"))
+except LookupError:
+    nltk.download("stopwords")
+    stop_words = set(stopwords.words("english"))
+
+
+# =================== LOAD MODEL & VECTORIZER ===================
+
 @st.cache_resource
 def load_artifacts():
-    # NOTE: make sure these names match the files in your repo
+    # Make sure these filenames match your repo exactly
     model = joblib.load("sentiment_svm_model.pkl")
-    vectorizer = joblib.load("tfidf_vectorizer.pkl")  # or "tfidf_vectorizer (1).pkl"
+    # If your file is named 'tfidf_vectorizer (1).pkl', change the line below:
+    vectorizer = joblib.load("tfidf_vectorizer.pkl")
+    # vectorizer = joblib.load("tfidf_vectorizer (1).pkl")
     return model, vectorizer
+
 
 model, tfidf = load_artifacts()
 
-# ----------------------- PREPROCESSING -----------------------
+
+# =================== PREPROCESSING & PREDICTION ===================
+
 def clean_text(text: str) -> str:
+    """Same cleaning as used during training."""
     text = str(text).lower()
-    text = re.sub(r'[^a-zA-Z ]', ' ', text)      # keep only letters + space
+    text = re.sub(r"[^a-zA-Z ]", " ", text)  # keep only letters + spaces
     words = text.split()
     words = [w for w in words if w not in stop_words]
     return " ".join(words)
 
-# OPTIONAL: tiny rule-based neutral detector (for display only)
-NEUTRAL_KEYWORDS = ["okay", "ok", "average", "fine", "decent", "not bad", "not good"]
-
-def rule_based_neutral(text: str) -> bool:
-    t = text.lower()
-    return any(kw in t for kw in NEUTRAL_KEYWORDS)
 
 def predict_sentiment(review: str) -> str:
-    """
-    Returns: 'positive', 'negative' OR 'neutral' (heuristic).
-    The model itself is binary (pos/neg); neutral is rule-based for display.
-    """
-    # If strongly neutral-sounding, mark as neutral first
-    if rule_based_neutral(review):
-        return "neutral"
-
+    """Return 'positive' or 'negative' using the trained SVM model."""
     clean = clean_text(review)
     vec = tfidf.transform([clean])
     label = model.predict(vec)[0]  # 'positive' or 'negative'
-    return label
+    return label, clean
 
-# ----------------------- STREAMLIT UI -----------------------
+
+# =================== STREAMLIT UI ===================
+
 st.set_page_config(
     page_title="Mobile Review Sentiment Analyzer",
     page_icon="📱",
-    layout="wide"
+    layout="wide",
 )
 
-# Sidebar
+# ---------- Sidebar ----------
 with st.sidebar:
     st.title("ℹ️ About Project")
     st.markdown(
@@ -67,59 +94,81 @@ with st.sidebar:
         **NLP – Sentiment Analysis**
 
         - Domain: *Mobile product reviews*  
-        - Goal: Classify reviews as **Positive** or **Negative**  
+        - Task: Binary sentiment classification  
+          (**Positive** vs **Negative**)  
         - Model: **TF-IDF + SMOTE + LinearSVC**  
-        - Train accuracy: ~91%  
-        - Techniques:
-          - Text cleaning (lowercase, stopword removal)
-          - TF-IDF (uni + bi-grams)
-          - SMOTE for class balancing
+        - Test accuracy: ~**91%**  
+        
+        **Pipeline:**
+        1. Rating → sentiment labels  
+        2. Text cleaning (lowercase, stopword removal)  
+        3. TF-IDF (uni + bi-grams)  
+        4. SMOTE for class balancing  
+        5. LinearSVC training
         """
     )
     st.markdown("---")
-    st.markdown("**How to use:**\n1. Type or paste a review.\n2. Click **Predict Sentiment**.\n3. See the output and cleaned text.")
+    st.markdown("🔹 Type your own review or use example buttons to auto-fill text.")
 
-# Main title
+
+# ---------- Main Title ----------
 st.markdown("## 📱 Mobile Review Sentiment Analyzer")
-st.write("Predict whether a customer review is **Positive** or **Negative** based on the text.")
-
-# Example buttons
-col1, col2 = st.columns(2)
-with col1:
-    if st.button("🔹 Example Positive Review"):
-        st.session_state["example_text"] = "This phone is excellent, battery life is great and camera is amazing!"
-with col2:
-    if st.button("🔸 Example Negative Review"):
-        st.session_state["example_text"] = "Worst phone ever, battery drains fast and the screen quality is terrible."
-
-default_text = st.session_state.get("example_text", "")
-
-# Input area
-user_input = st.text_area(
-    "Enter a mobile product review:",
-    value=default_text,
-    height=150,
-    placeholder="Example: The battery life is great and the camera is amazing!"
+st.write(
+    "Enter a customer review about a mobile phone and the model will predict "
+    "whether the sentiment is **Positive** or **Negative**."
 )
 
-# Predict button
+# ---------- Session State Init ----------
+if "review_text" not in st.session_state:
+    st.session_state["review_text"] = ""
+
+if "pos_idx" not in st.session_state:
+    st.session_state["pos_idx"] = 0
+
+if "neg_idx" not in st.session_state:
+    st.session_state["neg_idx"] = 0
+
+# ---------- Example Buttons ----------
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    if st.button("🔹 Positive Example"):
+        idx = st.session_state["pos_idx"]
+        st.session_state["review_text"] = POSITIVE_EXAMPLES[idx]
+        st.session_state["pos_idx"] = (idx + 1) % len(POSITIVE_EXAMPLES)
+
+with col2:
+    if st.button("🔸 Negative Example"):
+        idx = st.session_state["neg_idx"]
+        st.session_state["review_text"] = NEGATIVE_EXAMPLES[idx]
+        st.session_state["neg_idx"] = (idx + 1) % len(NEGATIVE_EXAMPLES)
+
+with col3:
+    if st.button("🧹 Clear Text"):
+        st.session_state["review_text"] = ""
+
+# ---------- Text Area ----------
+user_input = st.text_area(
+    "Enter a mobile product review:",
+    key="review_text",
+    height=150,
+    placeholder="Example: The battery life is great and the camera is amazing!",
+)
+
+# ---------- Predict Button ----------
 if st.button("🔍 Predict Sentiment"):
     if not user_input.strip():
-        st.warning("Please type or select a review first.")
+        st.warning("Please type or choose a review first.")
     else:
-        label = predict_sentiment(user_input)
-        cleaned = clean_text(user_input)
+        label, cleaned = predict_sentiment(user_input)
 
         if label == "positive":
-            st.success("✅ **Sentiment: POSITIVE** 😊")
-        elif label == "negative":
-            st.error("❌ **Sentiment: NEGATIVE** 😠")
-        else:  # neutral (rule-based)
-            st.info("😐 **Sentiment: NEUTRAL (rule-based)**")
+            st.success("✅ Sentiment: **POSITIVE** 😊")
+        else:
+            st.error("❌ Sentiment: **NEGATIVE** 😠")
 
-        # Show cleaned text for explanation
-        with st.expander("🔎 See preprocessed (cleaned) text"):
+        with st.expander("🔎 View preprocessed (cleaned) text"):
             st.code(cleaned, language="text")
 
 st.markdown("---")
-st.caption("Backend: TF-IDF (uni+bi-grams) + SMOTE + LinearSVC (binary sentiment model)")
+st.caption("Backend: TF-IDF (uni+bi-grams) + SMOTE + LinearSVC – Binary Sentiment Model")
