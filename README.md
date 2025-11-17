@@ -13,6 +13,13 @@
 
 ---
 
+<p align="center">
+  <a href="YOUR_STREAMLIT_URL_HERE" target="_blank">
+    <img src="https://img.shields.io/badge/🔴 LIVE DEMO-Streamlit%20App-purple?style=for-the-badge&logo=streamlit" />
+  </a>
+</p>
+
+
 # 🌟 Overview
 
 This project is a **Sentiment Analysis Web Application** built using  
