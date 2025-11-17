@@ -14,7 +14,7 @@
 ---
 
 <p align="center">
-  <a href=👉(https://nlp-sentimental-analysis-project-uy8fgcd6vr7zq3os7uqh5s.streamlit.app/) target="_blank">
+  <a href=👉(https://nlp-sentimental-analysis-project.streamlit.app/) target="_blank">
     <img src="https://img.shields.io/badge/🔴 LIVE DEMO-Streamlit%20App-purple?style=for-the-badge&logo=streamlit" />
   </a>
 </p>
@@ -34,7 +34,7 @@ The final system is deployed as an interactive **Streamlit Web Application**, en
 ## 🚀 Live Demo
 
 🔗 **Try the App Here:**  
-👉(https://nlp-sentimental-analysis-project-uy8fgcd6vr7zq3os7uqh5s.streamlit.app/)
+👉(https://nlp-sentimental-analysis-project.streamlit.app/)
 
 
 # 🌟 Overview
