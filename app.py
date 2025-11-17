@@ -3,6 +3,9 @@ import joblib
 import re
 import nltk
 from nltk.corpus import stopwords
+from spellchecker import SpellChecker
+spell = SpellChecker()
+
 
 # =================== EXAMPLE REVIEWS ===================
 
@@ -62,12 +65,28 @@ model, tfidf = load_artifacts()
 # =================== PREPROCESSING & PREDICTION ===================
 
 def clean_text(text: str) -> str:
-    """Same cleaning as used during training."""
+    """Clean and lightly spell-correct the review text."""
+    # Lowercase
     text = str(text).lower()
-    text = re.sub(r"[^a-zA-Z ]", " ", text)  # keep only letters + spaces
+    # Keep only letters and spaces
+    text = re.sub(r"[^a-zA-Z ]", " ", text)
+    # Tokenize
     words = text.split()
-    words = [w for w in words if w not in stop_words]
-    return " ".join(words)
+
+    cleaned_words = []
+    for w in words:
+        if w in stop_words:
+            continue  # remove stopwords
+
+        # If spelling is wrong, spell.correction will try to fix it
+        corrected = spell.correction(w)
+        if corrected is None:
+            corrected = w
+
+        cleaned_words.append(corrected)
+
+    return " ".join(cleaned_words)
+
 
 
 def predict_sentiment(review: str) -> str:
