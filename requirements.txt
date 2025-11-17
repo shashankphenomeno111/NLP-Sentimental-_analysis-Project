@@ -5,3 +5,4 @@ nltk
 imbalanced-learn
 numpy
 pandas
+pyspellchecker
