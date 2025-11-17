@@ -88,8 +88,8 @@ It predicts whether a mobile review is:
 # 🔮 Workflow
 
 <p align="center">
-  <img src=<img width="600" height="297" alt="image" src="https://github.com/user-attachments/assets/87eb29a6-c52f-4e17-9651-d0456c00875b" />
- width="85%">
+  <img width="600" height="297" alt="image" src="https://github.com/user-attachments/assets/e5b88e4b-a372-4d77-b335-b0cf41be641f" />
+
 </p>
 
 Dataset
