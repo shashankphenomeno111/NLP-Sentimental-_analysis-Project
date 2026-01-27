@@ -6,3 +6,6 @@ imbalanced-learn
 numpy
 pandas
 pyspellchecker
+plotly
+wordcloud
+matplotlib
